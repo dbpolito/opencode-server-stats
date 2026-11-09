@@ -5,8 +5,8 @@ import { Stats } from "./rpc";
 
 export function statsSettings(ctx: Pick<Context, "storage">) {
   return ctx.storage.store("settings-v1", {
-    schema: Schema.Struct({ live: Schema.Boolean, interval: Schema.Number }),
-    initial: { live: true, interval: 2 },
+    schema: Schema.Struct({ live: Schema.Boolean, interval: Schema.Number, showHeader: Schema.optional(Schema.Boolean) }),
+    initial: { live: true, interval: 2, showHeader: true },
     scope: "global",
   });
 }
@@ -27,7 +27,18 @@ export function StatsSettingsPage(props: { settings: StatsSettings }) {
       </div>
       <div class="settings-tab-body settings-tab-body--sectioned">
       <section class="settings-section" aria-label="Updates">
-      <div data-component="settings-list">
+       <div data-component="settings-list">
+        <div data-component="settings-row" data-action="header">
+          <div data-slot="settings-row-copy">
+            <div data-slot="settings-row-title">Show header stats</div>
+            <div data-slot="settings-row-description">Show CPU and memory readings in the top-right session header.</div>
+          </div>
+          <div data-slot="settings-row-control">
+            <ui.Switch label="Show header stats" hideLabel checked={props.settings.value?.showHeader ?? true}
+              disabled={!props.settings.ready()}
+              onChange={(showHeader) => props.settings.update((draft) => { draft.showHeader = showHeader; })} />
+          </div>
+        </div>
         <div data-component="settings-row" data-action="live">
           <div data-slot="settings-row-copy"><div data-slot="settings-row-title">Live updates</div></div>
           <div data-slot="settings-row-control">

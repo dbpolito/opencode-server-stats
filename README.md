@@ -15,11 +15,36 @@ Requires OpenCode Desktop 2.2.0 or newer. The GUI API is experimental. Tested on
 
 History stays on each server through OpenCode's plugin storage. Retention defaults to 7 days. There is no external telemetry, and the plugin does not read prompts or message contents.
 
-## Get started
+## Install
 
-[Build and load a local checkout](CONTRIBUTING.md#load-locally), then open a session and click the CPU/memory readings in its header. You can also run `/stats` or choose **Server Stats** from the side panel's **+** menu. Drag the tab below the conversation if you want more room.
+Run:
 
-The cog beside **Server Stats** opens settings. Choose a refresh interval, turn live updates off, or change history retention. A **Refresh** button appears when live updates are off. Pausing the display does not stop history collection.
+```sh
+opencode plugin add opencode-server-stats
+```
+
+Or add the package to `plugins` in `~/.config/opencode/opencode.jsonc` (or `opencode.json`), keeping your existing entries:
+
+```jsonc
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugins": ["opencode-server-stats"]
+}
+```
+
+Use the global config so Desktop can load the UI. OpenCode installs the package and loads it automatically. If you were testing a local checkout, replace its path in `plugins` with the package name.
+
+To update later:
+
+```sh
+opencode plugin update opencode-server-stats
+```
+
+## Use
+
+Open a session and click the CPU/memory readings in its header. You can also run `/stats` or choose **Server Stats** from the side panel's **+** menu. Drag the tab below the conversation if you want more room.
+
+The cog beside **Server Stats** opens settings. Hide the header readings, choose a refresh interval, turn live updates off, or change history retention. A **Refresh** button appears when live updates are off. Pausing the display does not stop history collection.
 
 Remote servers need the plugin installed too. The dashboard reports the selected server's resources, not your local Desktop's.
 

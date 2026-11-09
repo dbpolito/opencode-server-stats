@@ -12,6 +12,7 @@ import { Dashboard } from "./view";
 import { StatsShortcut } from "./shortcut";
 import css from "./style.css?inline";
 import { statsSettings, StatsSettingsPage } from "./settings";
+import { Show } from "solid-js";
 
 export default Plugin.define({
   setup(ctx) {
@@ -20,7 +21,7 @@ export default Plugin.define({
       id: "stats",
       title: "Server Stats",
       icon: "window-analytics",
-      entries: [{ id: "live", title: "Live updates" }, { id: "interval", title: "Refresh interval" }, { id: "retention", title: "History retention" }],
+      entries: [{ id: "header", title: "Show header stats" }, { id: "live", title: "Live updates" }, { id: "interval", title: "Refresh interval" }, { id: "retention", title: "History retention" }],
       render: () => <StatsSettingsPage settings={settings} />,
     });
     const tab: PanelTab = {
@@ -38,7 +39,9 @@ export default Plugin.define({
     ctx.add(Slot, {
       at: "session.header",
       render: (props) => (
-        <StatsShortcut session={props.session} active={props.active} settings={settings} />
+        <Show when={settings.value?.showHeader ?? true}>
+          <StatsShortcut session={props.session} active={props.active} settings={settings} />
+        </Show>
       ),
     });
     ctx.add(Command, () => ({
