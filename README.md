@@ -2,6 +2,8 @@
 
 CPU, memory and disk stats for OpenCode Desktop, with live readings in the session header and a dashboard for history.
 
+![Server Stats dashboard showing CPU and memory graphs, disk space and active projects in OpenCode Desktop](docs/screenshot.jpg)
+
 Requires OpenCode Desktop 2.2.0 or newer. The GUI API is experimental. Tested on macOS; Linux and Windows still need live testing.
 
 ## What it shows
