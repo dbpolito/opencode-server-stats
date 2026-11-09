@@ -12,6 +12,7 @@ import { Stats, type Sample, type Session } from "./rpc";
 import { projects } from "./projects";
 import { bytes, cores } from "./format";
 import { refreshInterval, type StatsSettings } from "./settings";
+import { version } from "../package.json";
 
 
 export function Dashboard(props: {
@@ -283,13 +284,16 @@ export function Dashboard(props: {
                 )}
               </For>
             </Show>
-            <footer>
-              Server and machine measurements only—not Desktop or per-project
-              CPU. Recent history uses 2-second samples; older history uses saved minute averages.
-            </footer>
           </>
         )}
       </Show>
+      <footer>
+        <span>
+          Server and machine measurements only, excluding Desktop and per-project CPU.
+          Recent history uses 2-second samples; older history uses saved minute averages.
+        </span>
+        <span class="plugin-version" title="opencode-server-stats version">v{version}</span>
+      </footer>
     </main>
   );
 }

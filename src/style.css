@@ -367,10 +367,18 @@
   padding: 2px 4px;
 }
 .oc-stats footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
   margin-top: 22px;
   font-size: 10px;
   border-top: 1px solid var(--border-base);
   padding-top: 16px;
+}
+.oc-stats .plugin-version {
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 .oc-stats .notice {
   padding: 14px;
