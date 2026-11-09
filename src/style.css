@@ -1,0 +1,310 @@
+.oc-stats {
+  color: var(--text-base);
+  background: var(--background-base);
+  padding: 28px;
+  height: 100%;
+  overflow: auto;
+  font:
+    13px/1.5 system-ui,
+    sans-serif;
+}
+.oc-stats * {
+  box-sizing: border-box;
+}
+.oc-stats header,
+.oc-stats .toolbar,
+.oc-stats .section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+.oc-stats h1 {
+  font-size: 25px;
+  font-weight: 650;
+  letter-spacing: -0.8px;
+  margin: 4px 0;
+}
+.oc-stats h2 {
+  font-size: 16px;
+  font-weight: 600;
+}
+.oc-stats p,
+.oc-stats small,
+.oc-stats .server-meta,
+.oc-stats footer,
+.oc-stats .hint {
+  color: var(--text-weak);
+}
+.oc-stats .eyebrow {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: var(--text-weak);
+}
+.oc-stats .live {
+  white-space: nowrap;
+  color: var(--text-on-success-strong);
+  background: var(--surface-success-base);
+  padding: 3px 7px;
+  border-radius: 5px;
+  font-size: 11px;
+}
+.oc-stats .live.offline {
+  color: var(--text-on-warning-base);
+  background: var(--surface-warning-base);
+}
+.oc-stats .toolbar {
+  margin: 24px 0 12px;
+}
+.oc-stats select,
+.oc-stats .ranges,
+.oc-stats .notice {
+  border: 1px solid var(--border-base);
+  border-radius: 8px;
+}
+.oc-stats select {
+  background: var(--background-base);
+  color: inherit;
+  padding: 6px 10px;
+  margin-left: 8px;
+  max-width: 230px;
+}
+.oc-stats button {
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+}
+.oc-stats button:focus-visible,
+.oc-stats summary:focus-visible {
+  outline: 2px solid var(--text-interactive-base);
+  outline-offset: 2px;
+}
+.oc-stats .ranges {
+  display: flex;
+  padding: 3px;
+}
+.oc-stats .ranges button {
+  background: transparent;
+  border: 0;
+  border-radius: 5px;
+  padding: 3px 10px;
+  color: var(--text-weak);
+}
+.oc-stats .ranges button[aria-pressed="true"] {
+  background: var(--surface-raised-base);
+  color: var(--text-base);
+}
+.oc-stats .server-meta {
+  font-size: 11px;
+  margin-bottom: 20px;
+  overflow-wrap: anywhere;
+}
+.oc-stats .cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.oc-stats .metric {
+  border: 1px solid var(--border-base);
+  border-radius: 10px;
+  padding: 16px 16px 8px;
+  min-width: 0;
+}
+.oc-stats .metric > span {
+  display: block;
+  color: var(--text-weak);
+  font-size: 12px;
+}
+.oc-stats .metric > strong {
+  display: block;
+  font-size: 27px;
+  font-weight: 550;
+  letter-spacing: -0.8px;
+  font-variant-numeric: tabular-nums;
+  margin: 4px 0;
+}
+.oc-stats .metric small {
+  font-size: 10px;
+}
+.oc-stats .chart {
+  display: block;
+  width: 100%;
+  height: 80px;
+  margin-top: 12px;
+  overflow: visible;
+  color: var(--text-interactive-base);
+}
+.oc-stats .chart polyline {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  vector-effect: non-scaling-stroke;
+}
+.oc-stats .chart .area {
+  fill: currentColor;
+  opacity: 0.08;
+}
+.oc-stats .chart .grid {
+  stroke: var(--border-base);
+  stroke-width: 0.5;
+  fill: none;
+}
+.oc-stats .chart text {
+  font-size: 10px;
+  fill: var(--text-weak);
+}
+.oc-stats .chart-times {
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-weak);
+  font-size: 9px;
+  margin-top: 4px;
+}
+.oc-stats .activity {
+  display: grid;
+  grid-template-columns: 170px 1fr;
+  align-items: center;
+  margin: 20px 0;
+  padding: 18px;
+  border: 1px solid var(--border-base);
+  border-radius: 10px;
+}
+.oc-stats .activity strong {
+  display: block;
+  font-size: 32px;
+  font-weight: 500;
+}
+.oc-stats .activity div > span:last-child {
+  display: block;
+  font-size: 10px;
+  color: var(--text-weak);
+}
+.oc-stats .hint {
+  font-size: 11px;
+  margin: 0 0 14px;
+}
+.oc-stats .section-title > span {
+  color: var(--text-weak);
+  font-size: 11px;
+}
+.oc-stats .project {
+  border: 1px solid var(--border-base);
+  border-radius: 8px;
+  margin: 8px 0;
+  overflow: hidden;
+}
+.oc-stats summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px;
+  cursor: pointer;
+}
+.oc-stats .project-name {
+  min-width: 0;
+}
+.oc-stats .project-name > span {
+  display: block;
+  color: var(--text-weak);
+  font-size: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 260px;
+}
+.oc-stats .project-numbers {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+.oc-stats .project-numbers b {
+  color: var(--text-interactive-base);
+  font-weight: 500;
+}
+.oc-stats .session {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 12px;
+  text-align: start;
+  border: 0;
+  border-top: 1px solid var(--border-base);
+  background: transparent;
+  padding: 10px 14px;
+  font-size: 11px;
+}
+.oc-stats .session:hover {
+  background: var(--surface-raised-base);
+}
+.oc-stats .session-name {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.oc-stats .session-name small {
+  display: block;
+  font-size: 10px;
+}
+.oc-stats .state {
+  color: var(--text-weak);
+  font-size: 10px;
+  min-width: 48px;
+}
+.oc-stats .state[data-state="running"] {
+  color: var(--text-on-success-strong);
+  background: var(--surface-success-base);
+  border-radius: 4px;
+  padding: 2px 4px;
+}
+.oc-stats .state[data-state="waiting"] {
+  color: var(--text-on-warning-base);
+  background: var(--surface-warning-base);
+  border-radius: 4px;
+  padding: 2px 4px;
+}
+.oc-stats footer {
+  margin-top: 22px;
+  font-size: 10px;
+  border-top: 1px solid var(--border-base);
+  padding-top: 16px;
+}
+.oc-stats .notice {
+  padding: 14px;
+  margin-bottom: 16px;
+  color: var(--text-on-warning-base);
+  background: var(--surface-warning-base);
+  overflow-wrap: anywhere;
+}
+.oc-stats .notice button {
+  display: block;
+  margin-top: 8px;
+  background: transparent;
+  border: 0;
+  text-decoration: underline;
+}
+.oc-stats .empty {
+  padding: 30px 0;
+  text-align: center;
+}
+@media (max-width: 520px) {
+  .oc-stats {
+    padding: 16px;
+  }
+  .oc-stats .cards {
+    grid-template-columns: 1fr;
+  }
+  .oc-stats summary {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .oc-stats .project-numbers {
+    justify-content: flex-start;
+  }
+  .oc-stats .activity {
+    grid-template-columns: 130px 1fr;
+  }
+}
