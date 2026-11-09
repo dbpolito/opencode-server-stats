@@ -56,7 +56,7 @@ Storage failures show a warning while live metrics continue to work. The plugin 
 
 Live updates and the refresh interval are saved Desktop preferences shared by the dashboard and header. Available intervals are 2, 5, 10, 30 and 60 seconds. Automatic refreshes run while the view is visible and avoid overlapping requests.
 
-Show header stats is on by default. Turning it off hides the top-right CPU/memory readings and stops their refresh requests. The dashboard remains available through `/stats` and the side panel's **+** menu.
+Show header stats is on by default. Turning it off hides the top-right CPU/memory readings and stops their refresh requests. The dashboard remains available through `/server-stats` and the side panel's **+** menu.
 
 Turning live updates off pauses the display. The dashboard then offers manual Refresh. Server sampling and history recording continue every two seconds while the plugin is loaded.
 

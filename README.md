@@ -42,7 +42,7 @@ opencode plugin update opencode-server-stats
 
 ## Use
 
-Open a session and click the CPU/memory readings in its header. You can also run `/stats` or choose **Server Stats** from the side panel's **+** menu. Drag the tab below the conversation if you want more room.
+Open a session and click the CPU/memory readings in its header. You can also run `/server-stats` or choose **Server Stats** from the side panel's **+** menu. Drag the tab below the conversation if you want more room.
 
 The cog beside **Server Stats** opens settings. Hide the header readings, choose a refresh interval, turn live updates off, or change history retention. A **Refresh** button appears when live updates are off. Pausing the display does not stop history collection.
 

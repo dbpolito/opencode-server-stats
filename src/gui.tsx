@@ -46,9 +46,9 @@ export default Plugin.define({
     });
     ctx.add(Command, () => ({
       id: "open",
-      title: "Stats: Open server dashboard",
-      group: "Stats",
-      slash: { name: "stats" },
+      title: "Server Stats: Open dashboard",
+      group: "Server Stats",
+      slash: { name: "server-stats" },
       enabled: !!ctx.sessions.current(),
       run: open,
     }));

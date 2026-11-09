@@ -24,7 +24,7 @@ Build the plugin with `bun run build` (or use the watch command above). Add the 
 
 Replace the example path with your checkout's absolute path. Global configuration loads both the server and Desktop parts. Remote servers need their own installation.
 
-Open a session and run `/stats`, click the CPU/memory readings in the header, or select **Server Stats** in the side panel's **+** menu. The command palette also has **Stats: Open server dashboard**.
+Open a session and run `/server-stats`, click the CPU/memory readings in the header, or select **Server Stats** in the side panel's **+** menu. The command palette also has **Server Stats: Open dashboard**.
 
 ## Before sending changes
 
