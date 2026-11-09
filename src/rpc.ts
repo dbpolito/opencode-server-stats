@@ -15,12 +15,7 @@ export const Session = z.object({
   id: z.string(),
   projectID: z.string(),
   directory: z.string(),
-  title: z.string(),
-  parentID: z.string().optional(),
-  status: z.enum(["running", "waiting", "idle", "unknown"]),
-  cost: z.number(),
-  tokens: z.number(),
-  model: z.string().optional(),
+  status: z.enum(["running", "waiting"]),
 });
 export const Snapshot = z.object({
   host: z.string(),
@@ -30,16 +25,35 @@ export const Snapshot = z.object({
   cores: z.number(),
   uptime: z.number(),
   started: z.number(),
-  sessionsUpdated: z.number(),
+  retentionDays: z.number(),
+  historyError: z.string().nullable(),
+  latest: Sample.nullable(),
   samples: z.array(Sample),
-  sessions: z.array(Session),
+  disk: z.object({
+    path: z.string(),
+    total: z.number(),
+    used: z.number(),
+    available: z.number(),
+  }).nullable(),
+  memory: z.object({
+    total: z.number(),
+    used: z.number(),
+    cached: z.number(),
+    swapUsed: z.number(),
+    swapTotal: z.number(),
+  }).nullable(),
 });
 export type Sample = z.infer<typeof Sample>;
 export type Session = z.infer<typeof Session>;
 export type Snapshot = z.infer<typeof Snapshot>;
 
 export const Stats = Rpc.define({
-  id: "opencode-stats",
-  methods: { snapshot: { input: z.object({}), output: Snapshot } },
+  id: "opencode-server-stats",
+  methods: {
+    snapshot: { input: z.object({ minutes: z.number().int().min(1).max(43200).optional() }), output: Snapshot },
+    resources: { input: z.object({}), output: Sample.nullable() },
+    historySettings: { input: z.object({}), output: z.object({ retentionDays: z.number() }) },
+    configureHistory: { input: z.object({ retentionDays: z.number().int().min(1).max(30) }), output: z.object({ retentionDays: z.number() }) },
+  },
   events: {},
 });

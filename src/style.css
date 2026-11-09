@@ -1,3 +1,25 @@
+.oc-stats-shortcut {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.oc-stats-shortcut button {
+  gap: 8px;
+}
+.oc-stats-shortcut-value {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.oc-stats-shortcut-value svg {
+  flex-shrink: 0;
+}
+.oc-stats-shortcut-divider {
+  width: 1px;
+  height: 12px;
+  background: currentColor;
+  opacity: 0.25;
+  flex-shrink: 0;
+}
 .oc-stats {
   color: var(--text-base);
   background: var(--background-base);
@@ -56,6 +78,62 @@
 .oc-stats .toolbar {
   margin: 24px 0 12px;
 }
+.oc-stats .update-controls {
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  margin: 12px 0 20px;
+}
+.oc-stats .update-controls select {
+  margin-left: 0;
+}
+.oc-stats .update-controls .server-meta {
+  margin-bottom: 0;
+}
+.oc-stats .title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.oc-stats .dashboard-header {
+  gap: 12px;
+  flex-wrap: nowrap;
+  margin-bottom: 20px;
+  overflow-x: auto;
+}
+.oc-stats .dashboard-header .title-row,
+.oc-stats .dashboard-header .ranges,
+.oc-stats .dashboard-header .live {
+  flex-shrink: 0;
+}
+.oc-stats .dashboard-header h1 {
+  font-size: 20px;
+  white-space: nowrap;
+}
+.oc-stats .dashboard-header select {
+  margin-left: 0;
+  max-width: 210px;
+  min-width: 120px;
+}
+.oc-stats .dashboard-header .server-meta {
+  margin-bottom: 0;
+  min-width: 80px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.oc-stats .dashboard-header .ranges {
+  margin-left: auto;
+}
+.oc-stats .update-controls .ranges {
+  margin-left: auto;
+}
+.oc-stats .active-project {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 12px;
+}
 .oc-stats select,
 .oc-stats .ranges,
 .oc-stats .notice {
@@ -104,6 +182,18 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
 }
+.oc-stats .memory-breakdown {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin: 12px 0;
+  color: var(--text-weak);
+  font-variant-numeric: tabular-nums;
+}
+.oc-stats .memory-breakdown b {
+  color: var(--text-base);
+  font-weight: 500;
+}
 .oc-stats .metric {
   border: 1px solid var(--border-base);
   border-radius: 10px;
@@ -125,6 +215,16 @@
 }
 .oc-stats .metric small {
   font-size: 10px;
+}
+.oc-stats .disk {
+  margin-top: 12px;
+  padding-bottom: 16px;
+  overflow-wrap: anywhere;
+}
+.oc-stats .disk meter {
+  display: block;
+  width: 100%;
+  margin-top: 12px;
 }
 .oc-stats .chart {
   display: block;

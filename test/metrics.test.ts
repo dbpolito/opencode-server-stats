@@ -40,22 +40,18 @@ function session(input: Partial<Session>): Session {
     id: "a",
     projectID: "project",
     directory: "/repo",
-    title: "Test",
-    status: "idle",
-    cost: 0.25,
-    tokens: 100,
+    status: "running",
     ...input,
   };
 }
 
-test("groups worktrees by project without duplicating session cost", () => {
+test("groups active worktrees by project", () => {
   const result = projects([
     session({}),
     session({
       id: "b",
       directory: "/repo-worktree",
       status: "running",
-      parentID: "a",
     }),
     session({
       id: "c",
@@ -66,9 +62,7 @@ test("groups worktrees by project without duplicating session cost", () => {
   ]);
   expect(result).toHaveLength(2);
   expect(result[0].directory).toBe("/repo");
-  expect(result[0].running).toBe(1);
-  expect(result[0].cost).toBe(0.5);
-  expect(result[0].tokens).toBe(200);
+  expect(result[0].running).toBe(2);
   expect(result[1].waiting).toBe(1);
   expect(projects([])).toEqual([]);
 });

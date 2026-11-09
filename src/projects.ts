@@ -8,11 +8,8 @@ export function projects(sessions: Session[]) {
       directory: entries
         .map((session) => session.directory)
         .sort((a, b) => a.length - b.length)[0],
-      sessions: entries,
       running: entries.filter((session) => session.status === "running").length,
       waiting: entries.filter((session) => session.status === "waiting").length,
-      cost: entries.reduce((sum, session) => sum + session.cost, 0),
-      tokens: entries.reduce((sum, session) => sum + session.tokens, 0),
     }),
   ).sort(
     (a, b) =>

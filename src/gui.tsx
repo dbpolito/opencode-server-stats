@@ -3,17 +3,29 @@ import {
   MenuItem,
   Panel,
   Plugin,
+  Slot,
+  SettingsPage,
   Style,
   type PanelTab,
 } from "@opencode/plugin/gui";
 import { Dashboard } from "./view";
+import { StatsShortcut } from "./shortcut";
 import css from "./style.css?inline";
+import { statsSettings, StatsSettingsPage } from "./settings";
 
 export default Plugin.define({
   setup(ctx) {
+    const settings = statsSettings(ctx);
+    ctx.add(SettingsPage, {
+      id: "stats",
+      title: "Server Stats",
+      icon: "window-analytics",
+      entries: [{ id: "live", title: "Live updates" }, { id: "interval", title: "Refresh interval" }, { id: "retention", title: "History retention" }],
+      render: () => <StatsSettingsPage settings={settings} />,
+    });
     const tab: PanelTab = {
       id: "dashboard",
-      title: "Server stats",
+      title: "Server Stats",
       closable: "compact",
       fallback: true,
     };
@@ -23,6 +35,12 @@ export default Plugin.define({
         ctx.layout.open(`${ctx.id}:dashboard`, session, { tab: "select" });
     };
     ctx.add(Style, css);
+    ctx.add(Slot, {
+      at: "session.header",
+      render: (props) => (
+        <StatsShortcut session={props.session} active={props.active} settings={settings} />
+      ),
+    });
     ctx.add(Command, () => ({
       id: "open",
       title: "Stats: Open server dashboard",
@@ -31,18 +49,23 @@ export default Plugin.define({
       enabled: !!ctx.sessions.current(),
       run: open,
     }));
-    ctx.add(MenuItem, {
-      menu: "session.panel",
-      id: "open",
-      title: "Server stats",
-      run: open,
+    ctx.add(MenuItem, (): MenuItem => {
+      const session = ctx.sessions.current();
+      return {
+        menu: "session.panel",
+        id: "open",
+        title: "Server Stats",
+        icon: "window-analytics",
+        opened: !!session && ctx.layout.state(`${ctx.id}:dashboard`, session) !== "closed",
+        run: open,
+      };
     });
     ctx.add(Panel, {
       id: "dashboard",
       region: "side",
       wide: true,
       list: (input) => (input.open.includes("dashboard") ? [tab] : []),
-      render: (props) => <Dashboard ctx={ctx} session={props.session} />,
+      render: (props) => <Dashboard ctx={ctx} session={props.session} settings={settings} />,
     });
   },
 });

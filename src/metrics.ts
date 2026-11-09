@@ -36,7 +36,7 @@ export function createSampler(capacity = 1800) {
   };
   return {
     samples,
-    sample() {
+    sample(memoryUsed?: number) {
       const now = {
         time: performance.now(),
         cpu: process.cpuUsage(),
@@ -63,7 +63,7 @@ export function createSampler(capacity = 1800) {
         rss: memory.rss,
         heap: memory.heapUsed,
         heapTotal: memory.heapTotal,
-        machineUsed: totalmem() - freemem(),
+        machineUsed: memoryUsed ?? totalmem() - freemem(),
         machineTotal: totalmem(),
       };
       previous = now;

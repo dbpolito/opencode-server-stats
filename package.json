@@ -1,5 +1,5 @@
 {
-  "name": "opencode-stats",
+  "name": "opencode-server-stats",
   "version": "0.1.0",
   "description": "Live server health and project activity for OpenCode Desktop",
   "type": "module",

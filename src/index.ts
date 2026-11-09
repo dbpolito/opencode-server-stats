@@ -1,83 +1,101 @@
 import { cpus, hostname } from "node:os";
 import { Plugin } from "@opencode/plugin";
 import { createSampler } from "./metrics";
-import { Stats, type Session } from "./rpc";
+import { diskUsage } from "./disk";
+import { systemMemory, type Memory } from "./memory";
+import { Stats } from "./rpc";
+import { History, compact } from "./history";
 
 // Plugin instances are location-scoped, but process measurements must not be.
 let sampler = createSampler();
 let owners = 0;
 let timer: ReturnType<typeof setInterval> | undefined;
+let memory: Memory | null = null;
+let history: History;
+let historyError: string | null = null;
 
 export default Plugin.define({
-  id: "opencode-stats",
+  id: "opencode-server-stats",
   async setup(ctx) {
     if (owners++ === 0) {
       sampler = createSampler();
-      timer = setInterval(() => sampler.sample(), 2000);
+      const current = sampler;
+      memory = null;
+      history = new History(ctx.storage);
+      historyError = null;
+      try {
+        await history.init();
+      } catch (error) {
+        historyError = String(error);
+      }
+      let pending = false;
+      const collect = async () => {
+        if (pending) return;
+        pending = true;
+        try {
+          const measured = await systemMemory();
+          if (!owners || sampler !== current) return;
+          memory = measured;
+          sampler.sample(memory?.used);
+          try {
+            await history.record(sampler.samples.at(-1)!);
+            historyError = null;
+          } catch (error) {
+            historyError = String(error);
+          }
+        } finally {
+          pending = false;
+        }
+      };
+      timer = setInterval(collect, 2000);
       timer.unref();
     }
 
-    let cache: { updated: number; sessions: Session[] } | undefined;
-    let loading: Promise<Session[]> | undefined;
-    const sessions = async () => {
-      if (cache && Date.now() - cache.updated < 10_000) return cache.sessions;
-      if (loading) return loading;
-      loading = (async () => {
-        const result: Session[] = [];
-        let page = await ctx.session.list({ limit: 100, archived: false });
-        while (true) {
-          result.push(
-            ...page.data.map((session): Session => ({
-              id: session.id,
-              projectID: session.projectID,
-              directory: session.location.directory,
-              title: session.title ?? "Untitled session",
-              parentID: session.parentID,
-              status: "unknown",
-              cost: session.cost,
-              tokens:
-                session.tokens.input +
-                session.tokens.output +
-                session.tokens.reasoning +
-                session.tokens.cache.read +
-                session.tokens.cache.write,
-              model: session.model
-                ? `${session.model.providerID}/${session.model.id}`
-                : undefined,
-            })),
-          );
-          if (!page.cursor.next) break;
-          page = await ctx.session.list({
-            cursor: page.cursor.next,
-            limit: 100,
-          });
-        }
-        cache = { updated: Date.now(), sessions: result };
-        return result;
-      })().finally(() => {
-        loading = undefined;
-      });
-      return loading;
-    };
-
     await ctx.rpc.register(Stats, {
-      snapshot: async () => ({
-        host: hostname(),
-        platform: process.platform,
-        version: ctx.app.version,
-        pid: process.pid,
-        cores: cpus().length,
-        uptime: process.uptime(),
-        started: Date.now() - process.uptime() * 1000,
-        sessions: await sessions(),
-        sessionsUpdated: cache!.updated,
-        samples: [...sampler.samples],
-      }),
+      resources: async () => sampler.samples.at(-1) ?? null,
+      historySettings: async () => ({ retentionDays: history.retentionDays }),
+      configureHistory: async ({ retentionDays }) => history.configure(retentionDays),
+      snapshot: async ({ minutes = 60 }) => {
+        const now = Date.now();
+        const from = now - minutes * 60_000;
+        const recent = sampler.samples.filter((point) => point.time >= from);
+        let saved: typeof recent = [];
+        try {
+          saved = await history.read(from, now);
+        } catch (error) {
+          historyError = String(error);
+        }
+        return {
+          host: hostname(),
+          platform: process.platform,
+          version: ctx.app.version,
+          pid: process.pid,
+          cores: cpus().length,
+          uptime: process.uptime(),
+          started: Date.now() - process.uptime() * 1000,
+          retentionDays: history.retentionDays,
+          historyError,
+          latest: sampler.samples.at(-1) ?? null,
+          samples: compact([
+            ...saved.filter((point) => point.time + 60_000 <= (recent[0]?.time ?? now)),
+            ...recent,
+          ]),
+          disk: await diskUsage(ctx.location.directory),
+          memory,
+        };
+      },
     });
-    return () => {
+    return async () => {
       if (--owners !== 0) return;
       clearInterval(timer);
-      sampler.samples.length = 0;
+      const closingHistory = history;
+      const closingSampler = sampler;
+      try {
+        await closingHistory.flush();
+      } catch (error) {
+        console.error("Server Stats: could not save history", error);
+      }
+      closingSampler.samples.length = 0;
     };
   },
 });
