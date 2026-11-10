@@ -1,9 +1,13 @@
 {
   "name": "opencode-server-stats",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Live server health and project activity for OpenCode Desktop",
   "type": "module",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dbpolito/opencode-server-stats.git"
+  },
   "exports": {
     ".": "./src/index.ts",
     "./rpc": "./src/rpc.ts",

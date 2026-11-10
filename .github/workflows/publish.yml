@@ -1,0 +1,50 @@
+name: Publish to npm
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-${{ github.event.release.tag_name }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Verify release version
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFileSync } from "node:fs";
+          const { version } = JSON.parse(readFileSync("package.json", "utf8"));
+          if (process.env.RELEASE_TAG.replace(/^v/, "") !== version) {
+            throw new Error(`Release tag ${process.env.RELEASE_TAG} does not match package version ${version}`);
+          }
+          NODE
+
+      - run: bun install --frozen-lockfile
+      - run: bun run check
+
+      - name: Publish package
+        env:
+          NPM_DIST_TAG: ${{ github.event.release.prerelease && 'next' || 'latest' }}
+        run: npm publish --access public --provenance --tag "$NPM_DIST_TAG"
