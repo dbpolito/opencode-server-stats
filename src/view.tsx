@@ -89,8 +89,12 @@ export function Dashboard(props: {
       }
     },
   );
-  const data = () =>
-    snapshot.latest?.server === server() ? snapshot.latest.data : undefined;
+  const data = () => {
+    // Before the first result, even `latest` suspends the surrounding screen.
+    // Keep the panel's loading UI visible without suspending OpenCode's shell.
+    if (snapshot.state === "unresolved" || snapshot.state === "pending") return undefined;
+    return snapshot.latest?.server === server() ? snapshot.latest.data : undefined;
+  };
   const samples = createMemo(
     () =>
       data()?.samples.filter(
